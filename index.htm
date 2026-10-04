@@ -1,0 +1,3852 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090d">
+<meta name="description" content="NOVA SHOP — современный интернет-магазин">
+<title>NOVA SHOP</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+
+<style>
+:root{
+  --bg:#07080c;
+  --card:#11131a;
+  --card2:#171923;
+  --line:#ffffff12;
+  --muted:#8d90a0;
+  --text:#fff;
+  --a:#8b6cff;
+  --a2:#5b3be0;
+  --green:#35d39a;
+  --red:#ff5e72;
+  --yellow:#ffc857
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 80% -10%,#30235b 0,transparent 34%),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,Arial,sans-serif;
+}
+
+button,input,textarea,select{font:inherit}
+button{border:0;cursor:pointer;color:inherit}
+
+.app{
+  max-width:1200px;
+  margin:auto;
+  padding-bottom:105px
+}
+
+.top{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding:20px
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#a38aff,#5b3be0);
+  font-size:24px
+}
+
+.hello{flex:1}
+.hello small{display:block;color:var(--muted)}
+.hello b{font-size:20px}
+
+.icon{
+  width:45px;
+  height:45px;
+  border-radius:15px;
+  background:var(--card);
+  border:1px solid var(--line);
+  font-size:21px
+}
+
+.search{
+  margin:0 20px;
+  height:55px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  padding:0 15px;
+  gap:10px
+}
+
+.search input{
+  flex:1;
+  background:none;
+  border:0;
+  outline:0;
+  color:#fff
+}
+
+.section{padding:25px 20px 0}
+
+.head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px
+}
+
+.head h2{margin:0;font-size:20px}
+
+.link{
+  color:#a68fff;
+  font-weight:800;
+  cursor:pointer
+}
+
+.cats{
+  display:flex;
+  gap:11px;
+  overflow:auto
+}
+
+.cat{
+  min-width:84px;
+  text-align:center
+}
+
+.catbox{
+  height:68px;
+  border-radius:20px;
+  background:var(--card);
+  border:1px solid var(--line);
+  display:grid;
+  place-items:center;
+  font-size:27px
+}
+
+.cat span{
+  display:block;
+  margin-top:7px;
+  color:#c4c5cc;
+  font-size:12px
+}
+
+.hero{
+  margin:24px 20px 0;
+  padding:24px;
+  border-radius:28px;
+  background:linear-gradient(125deg,#2b2055,#11131a 75%);
+  border:1px solid var(--line);
+  min-height:190px
+}
+
+.hero small{
+  color:#b9aaff;
+  font-weight:900;
+  letter-spacing:1px
+}
+
+.hero h1{
+  font-size:38px;
+  margin:10px 0 4px
+}
+
+.hero p{
+  color:#aaaabd;
+  margin:0
+}
+
+.btn{
+  padding:12px 17px;
+  border-radius:13px;
+  background:linear-gradient(135deg,var(--a),var(--a2));
+  font-weight:900
+}
+
+.btn.light{
+  background:#fff;
+  color:#111
+}
+
+.btn:disabled,
+.add:disabled{
+  opacity:.4;
+  cursor:not-allowed
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px
+}
+
+.product{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:22px;
+  overflow:hidden
+}
+
+.photo{
+  height:230px;
+  position:relative;
+  background:#191b24
+}
+
+.photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block
+}
+
+.heart{
+  position:absolute;
+  right:10px;
+  top:10px;
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  background:#0009
+}
+
+.heart.on{color:#ff5870}
+
+.rating{
+  position:absolute;
+  left:10px;
+  bottom:10px;
+  background:#000b;
+  border-radius:9px;
+  padding:5px 8px;
+  font-size:11px;
+  font-weight:900
+}
+
+.pinfo{padding:12px}
+.muted{color:var(--muted)}
+.cattext{font-size:11px;color:#737685}
+
+.pname{
+  font-weight:850;
+  margin:5px 0 9px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis
+}
+
+.pr{
+  display:flex;
+  align-items:center;
+  gap:7px
+}
+
+.price{
+  font-weight:950;
+  font-size:17px
+}
+
+.old{
+  text-decoration:line-through;
+  color:#686b78;
+  font-size:11px
+}
+
+.add{
+  margin-left:auto;
+  width:35px;
+  height:35px;
+  border-radius:11px;
+  background:linear-gradient(135deg,var(--a),var(--a2));
+  font-size:23px
+}
+
+.bottom{
+  position:fixed;
+  z-index:50;
+  left:50%;
+  bottom:12px;
+  transform:translateX(-50%);
+  width:min(760px,calc(100% - 20px));
+  height:72px;
+  background:#101117ee;
+  border:1px solid var(--line);
+  backdrop-filter:blur(18px);
+  border-radius:25px;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 20px 60px #0009
+}
+
+.nav{
+  background:none;
+  color:#777987;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  font-size:10px;
+  min-width:60px
+}
+
+.nav i{
+  font-style:normal;
+  font-size:21px
+}
+
+.nav.active{color:#a58cff}
+
+.badge{
+  background:#ff536a;
+  color:#fff;
+  border-radius:10px;
+  padding:2px 6px;
+  font-size:9px;
+  position:absolute;
+  margin:-2px 0 0 18px
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:#000b;
+  backdrop-filter:blur(8px);
+  display:none;
+  z-index:100;
+  align-items:flex-end
+}
+
+.modal.show{display:flex}
+
+.sheet{
+  width:100%;
+  max-height:94vh;
+  overflow:auto;
+  background:#101117;
+  border:1px solid var(--line);
+  border-radius:30px 30px 0 0;
+  padding:20px
+}
+
+.handle{
+  width:44px;
+  height:4px;
+  background:#444754;
+  border-radius:9px;
+  margin:0 auto 18px
+}
+
+.sheethead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+
+.sheet h2{
+  margin:0;
+  font-size:25px
+}
+
+.close{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:#20222b
+}
+
+.form{
+  display:grid;
+  gap:12px;
+  margin-top:18px
+}
+
+.field label{
+  display:block;
+  color:#a8a9b5;
+  font-size:12px;
+  margin-bottom:6px
+}
+
+.field input,
+.field textarea,
+.field select{
+  width:100%;
+  padding:13px;
+  border-radius:13px;
+  border:1px solid var(--line);
+  background:#171923;
+  color:#fff;
+  outline:0
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+  border-color:#8b6cff
+}
+
+.field textarea{
+  min-height:90px;
+  resize:vertical
+}
+
+.formgrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px
+}
+
+.full{grid-column:1/-1}
+
+.cartitem{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid var(--line)
+}
+
+.cartitem img{
+  width:70px;
+  height:70px;
+  object-fit:cover;
+  border-radius:14px
+}
+
+.cartmain{flex:1}
+
+.qty{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-top:7px
+}
+
+.qty button{
+  width:28px;
+  height:28px;
+  border-radius:9px;
+  background:#252733
+}
+
+.summary{
+  background:#171923;
+  border-radius:18px;
+  padding:15px;
+  margin-top:16px
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin:8px 0
+}
+
+.total{
+  font-size:20px;
+  font-weight:950
+}
+
+.paybox{
+  background:#171923;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:15px;
+  margin-top:12px
+}
+
+.option{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  margin:8px 0;
+  background:#12141b
+}
+
+.option.selected{
+  border-color:var(--a);
+  background:#1a1630
+}
+
+.map{
+  height:340px;
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  margin-top:12px
+}
+
+.leaflet-container{background:#151820}
+
+.detailgrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px
+}
+
+.detailimg{
+  width:100%;
+  height:480px;
+  object-fit:cover;
+  border-radius:25px
+}
+
+.timeline .step{
+  display:flex;
+  gap:12px;
+  margin:18px 0
+}
+
+.dot{
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#2a214d;
+  color:#ad99ff
+}
+
+.navtabs{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  margin:15px 0
+}
+
+.tab{
+  padding:10px 13px;
+  border-radius:12px;
+  background:#171923;
+  color:#aaa;
+  white-space:nowrap
+}
+
+.tab.active{
+  background:#2a214d;
+  color:#fff
+}
+
+.adminstat{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px
+}
+
+.stat{
+  padding:14px;
+  border-radius:17px;
+  background:var(--card);
+  border:1px solid var(--line)
+}
+
+.stat b{
+  display:block;
+  font-size:22px;
+  margin-top:4px
+}
+
+.admincard,
+.request,
+.ordercard{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:19px;
+  padding:15px;
+  margin:10px 0
+}
+
+.adminrow{
+  display:flex;
+  gap:12px;
+  align-items:center
+}
+
+.adminrow img{
+  width:70px;
+  height:70px;
+  border-radius:14px;
+  object-fit:cover
+}
+
+.grow{flex:1}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px
+}
+
+.mini{
+  padding:9px 11px;
+  border-radius:11px;
+  background:#242631;
+  font-weight:750
+}
+
+.mini.primary{
+  background:#2a214d;
+  color:#c8bcff
+}
+
+.mini.danger{
+  background:#3a1d25;
+  color:#ff8b99
+}
+
+.routegrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px
+}
+
+.point{
+  padding:13px;
+  border-radius:15px;
+  background:#171923;
+  border:1px solid var(--line)
+}
+
+.point small{
+  display:block;
+  color:var(--muted);
+  margin-bottom:4px
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:60px 15px
+}
+
+.toast{
+  position:fixed;
+  z-index:200;
+  left:50%;
+  bottom:98px;
+  transform:translate(-50%,20px);
+  opacity:0;
+  pointer-events:none;
+  background:#fff;
+  color:#111;
+  padding:12px 17px;
+  border-radius:13px;
+  font-weight:850;
+  transition:.2s
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0)
+}
+
+.hidden{display:none!important}
+
+.rolebanner{
+  padding:12px 20px
+}
+
+.rolebanner>div{
+  padding:12px 15px;
+  border-radius:15px;
+  background:#171923;
+  border:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+
+.rolebanner b{color:#b8a7ff}
+
+.admin-layout{
+  min-height:65vh
+}
+
+.admin-title{
+  padding:5px 0 18px
+}
+
+.admin-title h1{
+  margin:0;
+  font-size:30px
+}
+
+.admin-title p{
+  margin:5px 0 0;
+  color:var(--muted)
+}
+
+.admin-menu{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:20px
+}
+
+.admin-menu button{
+  padding:12px 15px;
+  border-radius:13px;
+  background:#171923;
+  border:1px solid var(--line)
+}
+
+.admin-menu button.active{
+  background:linear-gradient(135deg,#2d205c,#1b1535);
+  border-color:#8b6cff;
+  color:#fff
+}
+
+.admin-exit{
+  background:#3a1d25!important;
+  color:#ff9baa
+}
+
+.status{
+  padding:5px 9px;
+  border-radius:9px;
+  background:#252733;
+  font-size:12px;
+  font-weight:800
+}
+
+.profile{
+  padding:35px 20px
+}
+
+.avatar{
+  width:90px;
+  height:90px;
+  display:grid;
+  place-items:center;
+  border-radius:30px;
+  background:linear-gradient(135deg,#8b6cff,#5b3be0);
+  font-size:42px
+}
+
+.profile h2{
+  margin-bottom:5px
+}
+
+.profile p{
+  color:var(--muted)
+}
+
+.settings{
+  margin-top:25px
+}
+
+.settings .admincard{
+  cursor:pointer
+}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:repeat(3,1fr)}
+}
+
+@media(max-width:680px){
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:12px
+  }
+
+  .photo{height:205px}
+
+  .detailgrid,
+  .formgrid{
+    grid-template-columns:1fr
+  }
+
+  .detailimg{height:350px}
+
+  .adminstat{
+    grid-template-columns:1fr 1fr
+  }
+
+  .routegrid{
+    grid-template-columns:1fr
+  }
+
+  .hero h1{font-size:34px}
+
+  .admin-menu{
+    overflow:auto;
+    flex-wrap:nowrap
+  }
+}
+
+@media(min-width:900px){
+  .modal{
+    align-items:center;
+    padding:20px
+  }
+
+  .sheet{
+    max-width:900px;
+    border-radius:30px;
+    margin:auto
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="top">
+  <div class="logo">🛍️</div>
+
+  <div class="hello">
+    <small id="helloSmall">Добро пожаловать 👋</small>
+    <b>NOVA SHOP</b>
+  </div>
+
+  <button class="icon" onclick="toast('Новых уведомлений нет')">🔔</button>
+  <button class="icon" onclick="openMore()">⋮</button>
+</header>
+
+<div id="roleBanner" class="rolebanner hidden"></div>
+
+<div class="search">
+  <span>🔎</span>
+  <input id="search" placeholder="Что вы хотите найти?" oninput="handleSearch()">
+</div>
+
+<main id="main"></main>
+
+<nav class="bottom" id="bottomNav">
+  <button id="nHome" class="nav active" onclick="go('home')">
+    <i>⌂</i>Главная
+  </button>
+
+  <button id="nSearch" class="nav" onclick="go('search')">
+    <i>⌕</i>Поиск
+  </button>
+
+  <button id="nCart" class="nav" onclick="openCart()">
+    <i>🛍</i>
+    <b id="badge" class="badge">0</b>
+    Корзина
+  </button>
+
+  <button id="nOrders" class="nav" onclick="go('orders')">
+    <i>▣</i>Заказы
+  </button>
+
+  <button id="nProfile" class="nav" onclick="go('profile')">
+    <i>♙</i>Профиль
+  </button>
+</nav>
+
+</div>
+
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
+  <div id="sheet" class="sheet"></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<script>
+'use strict';
+
+const KEY='nova_shop_v3';
+
+const defaultState={
+  products:[
+    {
+      id:1,
+      name:'Air Max Runner',
+      cat:'Обувь',
+      price:89.99,
+      old:119.99,
+      stock:14,
+      rating:4.9,
+      img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900',
+      desc:'Лёгкие современные кроссовки для города.'
+    },
+    {
+      id:2,
+      name:'Premium Headphones',
+      cat:'Техника',
+      price:129.99,
+      old:159.99,
+      stock:8,
+      rating:4.8,
+      img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900',
+      desc:'Беспроводные наушники с чистым звуком.'
+    },
+    {
+      id:3,
+      name:'Smart Watch Pro',
+      cat:'Гаджеты',
+      price:149.99,
+      old:189.99,
+      stock:10,
+      rating:4.7,
+      img:'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900',
+      desc:'Умные часы для спорта и повседневных задач.'
+    },
+    {
+      id:4,
+      name:'Minimal Backpack',
+      cat:'Аксессуары',
+      price:59.99,
+      old:79.99,
+      stock:20,
+      rating:4.8,
+      img:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=900',
+      desc:'Минималистичный рюкзак на каждый день.'
+    },
+    {
+      id:5,
+      name:'Classic Sneakers',
+      cat:'Обувь',
+      price:74.99,
+      old:99.99,
+      stock:16,
+      rating:4.6,
+      img:'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=900',
+      desc:'Классическая модель для ежедневной носки.'
+    },
+    {
+      id:6,
+      name:'Urban Jacket',
+      cat:'Одежда',
+      price:109.99,
+      old:149.99,
+      stock:7,
+      rating:4.9,
+      img:'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=900',
+      desc:'Универсальная городская куртка.'
+    },
+    {
+      id:7,
+      name:'Modern Camera',
+      cat:'Техника',
+      price:399.99,
+      old:459.99,
+      stock:4,
+      rating:4.9,
+      img:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=900',
+      desc:'Камера для фото и видео.'
+    },
+    {
+      id:8,
+      name:'Leather Wallet',
+      cat:'Аксессуары',
+      price:39.99,
+      old:54.99,
+      stock:25,
+      rating:4.7,
+      img:'https://images.unsplash.com/photo-1627123424574-724758594e93?w=900',
+      desc:'Классический кожаный кошелёк.'
+    }
+  ],
+
+  cart:{},
+  favorites:[],
+  orders:[],
+  courierRequests:[],
+  couriers:[],
+
+  config:{
+    shopName:'NOVA SHOP',
+    shopAddress:'Душанбе, проспект Рудаки',
+    shopLat:38.5737,
+    shopLng:68.7864,
+    deliveryFee:3,
+    paymentBank:'Alif Bank',
+    paymentAccount:'0000 0000 0000 0000',
+    paymentName:'NOVA SHOP'
+  },
+
+  profile:{
+    name:'',
+    phone:'',
+    address:''
+  }
+};
+
+let state=load();
+let role=localStorage.getItem('nova_role')||'customer';
+let category='all';
+let currentPage='home';
+let editingId=null;
+let map=null;
+let mapMarker=null;
+let deliveryPoint=null;
+
+function clone(obj){
+  return JSON.parse(JSON.stringify(obj));
+}
+
+function load(){
+  try{
+    const x=JSON.parse(localStorage.getItem(KEY));
+    return x?merge(defaultState,x):clone(defaultState);
+  }catch(e){
+    return clone(defaultState);
+  }
+}
+
+function merge(a,b){
+  const x=clone(a);
+  Object.keys(b||{}).forEach(k=>{
+    x[k]=b[k];
+  });
+  return x;
+}
+
+function save(){
+  localStorage.setItem(KEY,JSON.stringify(state));
+  updateBadge();
+}
+
+function esc(v){
+  return String(v??'').replace(/[&<>'"]/g,c=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    "'":'&#39;',
+    '"':'&quot;'
+  }[c]));
+}
+
+function money(n){
+  return '$'+Number(n||0).toFixed(2);
+}
+
+function toast(t){
+  const e=document.getElementById('toast');
+
+  if(!e)return;
+
+  e.textContent=t;
+  e.classList.add('show');
+
+  clearTimeout(window.tt);
+
+  window.tt=setTimeout(()=>{
+    e.classList.remove('show');
+  },2300);
+}
+
+function updateBadge(){
+  const badge=document.getElementById('badge');
+
+  if(!badge)return;
+
+  const count=Object.values(state.cart).reduce(
+    (a,b)=>a+Number(b||0),
+    0
+  );
+
+  badge.textContent=count;
+}
+
+function getProduct(id){
+  return state.products.find(p=>p.id==id);
+}
+
+function setNav(active){
+  document.querySelectorAll('.nav').forEach(x=>{
+    x.classList.remove('active');
+  });
+
+  const ids={
+    home:'nHome',
+    search:'nSearch',
+    orders:'nOrders',
+    profile:'nProfile'
+  };
+
+  if(ids[active]){
+    const el=document.getElementById(ids[active]);
+    if(el)el.classList.add('active');
+  }
+}
+
+function handleSearch(){
+  if(role!=='customer')return;
+
+  currentPage='home';
+  renderHome();
+}
+
+function go(page){
+
+  if(role==='admin'){
+    renderAdmin();
+    return;
+  }
+
+  if(role==='courier'){
+    renderCourier();
+    return;
+  }
+
+  currentPage=page;
+  setNav(page);
+
+  if(page==='home')renderHome();
+  if(page==='search')renderSearch();
+  if(page==='orders')renderOrders();
+  if(page==='profile')renderProfile();
+}
+
+function renderHome(){
+
+  currentPage='home';
+  setNav('home');
+
+  const search=document.getElementById('search');
+
+  const q=search
+    ? search.value.trim().toLowerCase()
+    : '';
+
+  const list=state.products.filter(p=>
+    (category==='all'||p.cat===category)&&
+    (
+      !q||
+      p.name.toLowerCase().includes(q)||
+      p.cat.toLowerCase().includes(q)
+    )
+  );
+
+  document.getElementById('main').innerHTML=`
+
+<section class="section">
+
+  <div class="head">
+    <h2>Категории</h2>
+    <span class="link" onclick="setCategory('all')">Все</span>
+  </div>
+
+  <div class="cats">
+
+    <div class="cat" onclick="setCategory('Обувь')">
+      <div class="catbox">👟</div>
+      <span>Обувь</span>
+    </div>
+
+    <div class="cat" onclick="setCategory('Техника')">
+      <div class="catbox">💻</div>
+      <span>Техника</span>
+    </div>
+
+    <div class="cat" onclick="setCategory('Одежда')">
+      <div class="catbox">🧥</div>
+      <span>Одежда</span>
+    </div>
+
+    <div class="cat" onclick="setCategory('Аксессуары')">
+      <div class="catbox">🎒</div>
+      <span>Аксессуары</span>
+    </div>
+
+    <div class="cat" onclick="setCategory('Гаджеты')">
+      <div class="catbox">⌚</div>
+      <span>Гаджеты</span>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="hero">
+
+  <small>🔥 ГОРЯЧАЯ АКЦИЯ</small>
+
+  <h1>До -40%</h1>
+
+  <p>Лучшие товары по специальной цене</p>
+
+  <br>
+
+  <button class="btn light" onclick="setCategory('all')">
+    Смотреть товары
+  </button>
+
+</section>
+
+<section class="section">
+
+  <div class="head">
+    <h2>${q?'Результаты поиска':'Популярное'}</h2>
+    <span class="link">${list.length} товаров</span>
+  </div>
+
+  <div class="grid">
+
+    ${
+      list.length
+      ?list.map(productCard).join('')
+      :'<div class="empty" style="grid-column:1/-1">Ничего не найдено</div>'
+    }
+
+  </div>
+
+</section>
+`;
+
+  updateBadge();
+}
+
+function productCard(p){
+
+  const fav=state.favorites.includes(p.id);
+
+  return `
+
+<article class="product">
+
+  <div class="photo">
+
+    <img
+      src="${esc(p.img)}"
+      onerror="this.src='https://placehold.co/800x800/181a23/ffffff?text=PRODUCT'"
+    >
+
+    <button
+      class="heart ${fav?'on':''}"
+      onclick="event.stopPropagation();toggleFav(${p.id})"
+    >
+      ${fav?'♥':'♡'}
+    </button>
+
+    <span class="rating">
+      ⭐ ${p.rating}
+    </span>
+
+  </div>
+
+  <div class="pinfo" onclick="openProduct(${p.id})">
+
+    <div class="cattext">
+      ${esc(p.cat)} · ${p.stock>0?'В наличии':'Нет в наличии'}
+    </div>
+
+    <div class="pname">
+      ${esc(p.name)}
+    </div>
+
+    <div class="pr">
+
+      <span class="price">
+        ${money(p.price)}
+      </span>
+
+      ${
+        p.old
+        ?`<span class="old">${money(p.old)}</span>`
+        :''
+      }
+
+      <button
+        class="add"
+        ${p.stock<1?'disabled':''}
+        onclick="event.stopPropagation();addCart(${p.id})"
+      >
+        +
+      </button>
+
+    </div>
+
+  </div>
+
+</article>
+`;
+}
+
+function setCategory(c){
+  category=c;
+  renderHome();
+}
+
+function toggleFav(id){
+
+  const i=state.favorites.indexOf(id);
+
+  if(i>=0){
+    state.favorites.splice(i,1);
+  }else{
+    state.favorites.push(id);
+  }
+
+  save();
+  renderHome();
+}
+
+function addCart(id){
+
+  const p=getProduct(id);
+
+  if(!p)return;
+
+  if(p.stock<1){
+    return toast('Товар закончился');
+  }
+
+  const q=Number(state.cart[id]||0);
+
+  if(q>=p.stock){
+    return toast('Больше товара нет на складе');
+  }
+
+  state.cart[id]=q+1;
+
+  save();
+
+  toast('Товар добавлен в корзину');
+}
+
+function changeQty(id,d){
+
+  const p=getProduct(id);
+
+  if(!p)return;
+
+  const q=Number(state.cart[id]||0)+d;
+
+  if(q<=0){
+    delete state.cart[id];
+  }
+  else if(q<=p.stock){
+    state.cart[id]=q;
+  }
+  else{
+    return toast('На складе осталось: '+p.stock);
+  }
+
+  save();
+  openCart();
+}
+
+function cartItems(){
+
+  return Object.entries(state.cart)
+    .map(([id,q])=>({
+      p:getProduct(id),
+      q:Number(q)
+    }))
+    .filter(x=>x.p);
+}
+
+function cartTotal(){
+
+  return cartItems().reduce(
+    (s,x)=>s+x.p.price*x.q,
+    0
+  );
+}
+
+function openCart(){
+
+  const items=cartItems();
+
+  showModal(`
+
+<div class="sheethead">
+  <h2>Корзина</h2>
+  <button class="close" onclick="closeModal()">×</button>
+</div>
+
+${
+  items.length
+  ?
+  items.map(x=>`
+
+  <div class="cartitem">
+
+    <img src="${esc(x.p.img)}">
+
+    <div class="cartmain">
+
+      <b>${esc(x.p.name)}</b>
+
+      <div>${money(x.p.price)}</div>
+
+      <div class="qty">
+
+        <button onclick="changeQty(${x.p.id},-1)">
+          −
+        </button>
+
+        <b>${x.q}</b>
+
+        <button onclick="changeQty(${x.p.id},1)">
+          +
+        </button>
+
+      </div>
+
+    </div>
+
+    <b>
+      ${money(x.p.price*x.q)}
+    </b>
+
+  </div>
+
+  `).join('')
+
+  +
+
+  `
+
+  <div class="summary">
+
+    <div class="row">
+      <span>Товары</span>
+      <b>${money(cartTotal())}</b>
+    </div>
+
+    <div class="row">
+      <span>Доставка</span>
+      <b>${money(state.config.deliveryFee)}</b>
+    </div>
+
+    <div class="row total">
+      <span>Итого</span>
+      <b>${money(cartTotal()+state.config.deliveryFee)}</b>
+    </div>
+
+    <button
+      class="btn"
+      style="width:100%;margin-top:10px"
+      onclick="checkout()"
+    >
+      Перейти к оформлению
+    </button>
+
+  </div>
+
+  `
+
+  :''
+}
+
+${
+  !items.length
+  ?'<div class="empty">Корзина пуста 🛍️</div>'
+  :''
+}
+
+`);
+}
+
+function openProduct(id){
+
+  const p=getProduct(id);
+
+  if(!p)return;
+
+  showModal(`
+
+<div class="detailgrid">
+
+  <div>
+
+    <img
+      class="detailimg"
+      src="${esc(p.img)}"
+      onerror="this.src='https://placehold.co/800x800/181a23/ffffff?text=PRODUCT'"
+    >
+
+  </div>
+
+  <div>
+
+    <div class="muted">${esc(p.cat)}</div>
+
+    <h1>${esc(p.name)}</h1>
+
+    <div>
+      ⭐⭐⭐⭐⭐
+      <span class="muted">${p.rating}</span>
+    </div>
+
+    <h2>${money(p.price)}</h2>
+
+    <p class="muted">
+      ${esc(p.desc)}
+    </p>
+
+    <div class="choice">
+      📦 Осталось на складе:
+      <b>${p.stock}</b>
+    </div>
+
+    <button
+      class="btn"
+      style="width:100%;margin-top:14px"
+      onclick="addCart(${p.id});closeModal()"
+      ${p.stock<1?'disabled':''}
+    >
+      Добавить в корзину
+    </button>
+
+  </div>
+
+</div>
+
+`);
+}
+
+function checkout(){
+
+  if(!cartItems().length){
+    return toast('Корзина пуста');
+  }
+
+  deliveryPoint=null;
+
+  showModal(`
+
+<div class="sheethead">
+  <h2>Оформление заказа</h2>
+  <button class="close" onclick="closeModal()">×</button>
+</div>
+
+<div class="form">
+
+  <div class="formgrid">
+
+    <div class="field">
+      <label>Имя *</label>
+      <input
+        id="cName"
+        value="${esc(state.profile.name)}"
+        placeholder="Ваше имя"
+      >
+    </div>
+
+    <div class="field">
+      <label>Телефон *</label>
+      <input
+        id="cPhone"
+        value="${esc(state.profile.phone)}"
+        placeholder="+992 ..."
+      >
+    </div>
+
+  </div>
+
+  <div class="field">
+    <label>Адрес доставки *</label>
+    <input
+      id="cAddress"
+      value="${esc(state.profile.address)}"
+      placeholder="Город, улица, дом, квартира"
+    >
+  </div>
+
+  <div class="field">
+    <label>Комментарий курьеру</label>
+    <textarea
+      id="cNote"
+      placeholder="Подъезд, этаж и т.д."
+    ></textarea>
+  </div>
+
+  <div class="paybox">
+
+    <b>📍 Куда доставить</b>
+
+    <div id="checkoutMap" class="map"></div>
+
+    <button class="mini" onclick="locateMe()">
+      📍 Использовать моё местоположение
+    </button>
+
+  </div>
+
+  <div class="paybox">
+
+    <b>💳 Способ оплаты</b>
+
+    <label class="option selected">
+      <input
+        type="radio"
+        name="pay"
+        value="transfer"
+        checked
+      >
+      Перевод на счёт
+    </label>
+
+    <label class="option">
+      <input
+        type="radio"
+        name="pay"
+        value="cash"
+      >
+      Наличными курьеру
+    </label>
+
+    <div
+      class="rolebanner"
+      style="padding:8px 0 0"
+    >
+
+      <div style="display:block">
+
+        <b>${esc(state.config.paymentBank)}</b>
+
+        <br>
+
+        Счёт:
+        ${esc(state.config.paymentAccount)}
+
+        <br>
+
+        Получатель:
+        ${esc(state.config.paymentName)}
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="summary">
+
+    <div class="row">
+      <span>Товары</span>
+      <b>${money(cartTotal())}</b>
+    </div>
+
+    <div class="row">
+      <span>Доставка</span>
+      <b>${money(state.config.deliveryFee)}</b>
+    </div>
+
+    <div class="row total">
+      <span>К оплате</span>
+      <b>${money(cartTotal()+state.config.deliveryFee)}</b>
+    </div>
+
+  </div>
+
+  <button
+    class="btn"
+    style="width:100%"
+    onclick="placeOrder()"
+  >
+    Подтвердить заказ
+  </button>
+
+</div>
+
+`);
+
+  setTimeout(initCheckoutMap,150);
+}
+
+function initCheckoutMap(){
+
+  if(!window.L)return;
+
+  const el=document.getElementById('checkoutMap');
+
+  if(!el)return;
+
+  if(map){
+    map.remove();
+    map=null;
+  }
+
+  map=L.map(el).setView(
+    [state.config.shopLat,state.config.shopLng],
+    12
+  );
+
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      maxZoom:19,
+      attribution:'© OpenStreetMap'
+    }
+  ).addTo(map);
+
+  L.marker([
+    state.config.shopLat,
+    state.config.shopLng
+  ])
+  .addTo(map)
+  .bindPopup('NOVA SHOP')
+  .openPopup();
+
+  map.on('click',e=>{
+    setDeliveryPoint(
+      e.latlng.lat,
+      e.latlng.lng
+    );
+  });
+}
+
+function setDeliveryPoint(lat,lng){
+
+  deliveryPoint={lat,lng};
+
+  if(mapMarker&&map){
+    map.removeLayer(mapMarker);
+  }
+
+  if(map){
+    mapMarker=L.marker([lat,lng])
+      .addTo(map)
+      .bindPopup('Ваша доставка')
+      .openPopup();
+  }
+
+  toast('Точка доставки выбрана');
+}
+
+function locateMe(){
+
+  if(!navigator.geolocation){
+    return toast('Геолокация недоступна');
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+
+      setDeliveryPoint(
+        pos.coords.latitude,
+        pos.coords.longitude
+      );
+
+      if(map){
+        map.setView(
+          [
+            pos.coords.latitude,
+            pos.coords.longitude
+          ],
+          15
+        );
+      }
+
+    },
+    ()=>{
+      toast('Не удалось получить местоположение');
+    }
+  );
+}
+
+function placeOrder(){
+
+  const name=document.getElementById('cName')?.value.trim()||'';
+  const phone=document.getElementById('cPhone')?.value.trim()||'';
+  const address=document.getElementById('cAddress')?.value.trim()||'';
+  const note=document.getElementById('cNote')?.value.trim()||'';
+
+  if(!name||!phone||!address){
+    return toast('Заполните имя, телефон и адрес');
+  }
+
+  if(!deliveryPoint){
+    return toast('Поставьте точку на карте');
+  }
+
+  const items=cartItems();
+
+  const order={
+    id:'NS-'+Date.now().toString().slice(-7),
+    created:new Date().toLocaleString('ru-RU'),
+    name,
+    phone,
+    address,
+    note,
+    lat:deliveryPoint.lat,
+    lng:deliveryPoint.lng,
+    from:state.config.shopAddress,
+    shopLat:state.config.shopLat,
+    shopLng:state.config.shopLng,
+
+    items:items.map(x=>({
+      id:x.p.id,
+      name:x.p.name,
+      price:x.p.price,
+      qty:x.q,
+      img:x.p.img
+    })),
+
+    subtotal:cartTotal(),
+    delivery:state.config.deliveryFee,
+    total:cartTotal()+state.config.deliveryFee,
+    status:'Принят',
+
+    payment:
+      document.querySelector('input[name="pay"]:checked')?.value
+      ||'transfer',
+
+    courierId:null
+  };
+
+  state.orders.unshift(order);
+
+  items.forEach(x=>{
+    x.p.stock-=x.q;
+  });
+
+  state.profile={
+    name,
+    phone,
+    address
+  };
+
+  state.cart={};
+
+  save();
+
+  deliveryPoint=null;
+
+  closeModal();
+
+  toast('Заказ '+order.id+' принят');
+
+  go('orders');
+}
+
+function renderOrders(){
+
+  const html=state.orders.length
+
+    ?state.orders.map(o=>`
+
+      <div class="ordercard">
+
+        <div class="head">
+          <b>${esc(o.id)}</b>
+
+          <span style="color:var(--green);font-weight:800">
+            ${esc(o.status)}
+          </span>
+        </div>
+
+        <div class="muted">
+          📍 ${esc(o.address)}
+        </div>
+
+        <div class="muted">
+          💰 ${money(o.total)}
+        </div>
+
+        <div class="actions">
+
+          <button
+            class="mini primary"
+            onclick="openOrder('${esc(o.id)}')"
+          >
+            Открыть заказ
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join('')
+
+    :'<div class="empty">Заказов пока нет 📦</div>';
+
+  document.getElementById('main').innerHTML=`
+
+<section class="section">
+
+  <div class="head">
+    <h2>Мои заказы</h2>
+  </div>
+
+  ${html}
+
+</section>
+
+`;
+}
+
+function openOrder(id){
+
+  const o=state.orders.find(x=>x.id===id);
+
+  if(!o)return;
+
+  showModal(`
+
+<div class="sheethead">
+
+  <h2>${esc(o.id)}</h2>
+
+  <button
+    class="close"
+    onclick="closeModal()"
+  >
+    ×
+  </button>
+
+</div>
+
+<div class="rolebanner">
+
+  <div>
+    <b>${esc(o.status)}</b>
+    <span>${esc(o.created)}</span>
+  </div>
+
+</div>
+
+<div class="routegrid">
+
+  <div class="point">
+    <small>ОТКУДА</small>
+    ${esc(o.from)}
+  </div>
+
+  <div class="point">
+    <small>КУДА</small>
+    ${esc(o.address)}
+  </div>
+
+</div>
+
+<div id="orderMap" class="map"></div>
+
+<div class="timeline">
+
+  <div class="step">
+    <div class="dot">✓</div>
+    <div>
+      <b>Заказ принят</b>
+      <div class="muted">
+        Заказ получен магазином
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="dot">📦</div>
+    <div>
+      <b>Собирается</b>
+      <div class="muted">
+        Товар готовится
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="dot">🚚</div>
+    <div>
+      <b>В пути</b>
+      <div class="muted">
+        Курьер доставляет заказ
+      </div>
+    </div>
+  </div>
+
+</div>
+
+`);
+
+  setTimeout(()=>{
+    initRouteMap(o,'orderMap');
+  },150);
+}
+
+function initRouteMap(o,id){
+
+  if(!window.L)return;
+
+  const el=document.getElementById(id);
+
+  if(!el)return;
+
+  const m=L.map(el).setView(
+    [o.lat,o.lng],
+    12
+  );
+
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      maxZoom:19,
+      attribution:'© OpenStreetMap'
+    }
+  ).addTo(m);
+
+  const a=[
+    o.shopLat,
+    o.shopLng
+  ];
+
+  const b=[
+    o.lat,
+    o.lng
+  ];
+
+  L.marker(a)
+    .addTo(m)
+    .bindPopup('Магазин');
+
+  L.marker(b)
+    .addTo(m)
+    .bindPopup('Клиент');
+
+  L.polyline(
+    [a,b],
+    {
+      color:'#8b6cff',
+      weight:5
+    }
+  ).addTo(m);
+
+  m.fitBounds(
+    [a,b],
+    {
+      padding:[25,25]
+    }
+  );
+}
+
+function renderProfile(){
+
+  document.getElementById('main').innerHTML=`
+
+<section class="profile">
+
+  <div class="avatar">👤</div>
+
+  <h2>
+    ${esc(state.profile.name||'Ваш профиль')}
+  </h2>
+
+  <p>
+    ${esc(state.profile.phone||'Телефон не указан')}
+  </p>
+
+  <div class="settings">
+
+    <div
+      class="admincard"
+      onclick="editProfile()"
+    >
+      👤 Личные данные
+      <span style="float:right">›</span>
+    </div>
+
+    <div
+      class="admincard"
+      onclick="openCourierApply()"
+    >
+      🚚 Стать доставщиком
+      <span style="float:right">›</span>
+    </div>
+
+    <div
+      class="admincard"
+      onclick="openMore()"
+    >
+      ⋮ Роли и настройки
+      <span style="float:right">›</span>
+    </div>
+
+  </div>
+
+</section>
+
+`;
+}
+
+function editProfile(){
+
+  showModal(`
+
+<div class="sheethead">
+
+  <h2>Профиль</h2>
+
+  <button
+    class="close"
+    onclick="closeModal()"
+  >
+    ×
+  </button>
+
+</div>
+
+<div class="form">
+
+  <div class="field">
+    <label>Имя</label>
+    <input
+      id="pName"
+      value="${esc(state.profile.name)}"
+    >
+  </div>
+
+  <div class="field">
+    <label>Телефон</label>
+    <input
+      id="pPhone"
+      value="${esc(state.profile.phone)}"
+    >
+  </div>
+
+  <div class="field">
+    <label>Адрес</label>
+    <input
+      id="pAddress"
+      value="${esc(state.profile.address)}"
+    >
+  </div>
+
+  <button
+    class="btn"
+    onclick="saveProfile()"
+  >
+    Сохранить
+  </button>
+
+</div>
+
+`);
+}
+
+function saveProfile(){
+
+  const name=document.getElementById('pName')?.value.trim()||'';
+  const phone=document.getElementById('pPhone')?.value.trim()||'';
+  const address=document.getElementById('pAddress')?.value.trim()||'';
+
+  state.profile={
+    name,
+    phone,
+    address
+  };
+
+  save();
+  closeModal();
+  renderProfile();
+
+  toast('Профиль сохранён');
+}
+
+function openMore(){
+
+  showModal(`
+
+<div class="sheethead">
+
+  <h2>Дополнительно</h2>
+
+  <button
+    class="close"
+    onclick="closeModal()"
+  >
+    ×
+  </button>
+
+</div>
+
+<button
+  class="option"
+  style="width:100%;text-align:left"
+  onclick="adminLogin()"
+>
+
+  <span>🛠️</span>
+
+  <span>
+    <b>Админ-панель</b>
+    <br>
+    <small class="muted">
+      Отдельный кабинет управления магазином
+    </small>
+  </span>
+
+</button>
+
+<button
+  class="option"
+  style="width:100%;text-align:left"
+  onclick="openCourierApply()"
+>
+
+  <span>🚚</span>
+
+  <span>
+    <b>Стать доставщиком</b>
+    <br>
+    <small class="muted">
+      Подать заявку администратору
+    </small>
+  </span>
+
+</button>
+
+${
+  role==='courier'
+  ?
+  `
+  <button
+    class="option"
+    style="width:100%;text-align:left"
+    onclick="closeModal();renderCourier()"
+  >
+    <span>🗺️</span>
+    <span>
+      <b>Кабинет доставщика</b>
+    </span>
+  </button>
+  `
+  :''
+}
+
+`);
+}
+
+function adminLogin(){
+
+  showModal(`
+
+<div class="sheethead">
+
+  <h2>Вход администратора</h2>
+
+  <button
+    class="close"
+    onclick="closeModal()"
+  >
+    ×
+  </button>
+
+</div>
+
+<p class="muted">
+  Введите код администратора.
+</p>
+
+<div class="field">
+
+  <label>Код</label>
+
+  <input
+    id="adminCode"
+    type="password"
+    inputmode="numeric"
+    autocomplete="off"
+    maxlength="4"
+    placeholder="1212"
+    onkeydown="if(event.key==='Enter')checkAdminCode()"
+  >
+
+</div>
+
+<button
+  class="btn"
+  style="width:100%;margin-top:12px"
+  onclick="checkAdminCode()"
+>
+  Войти
+</button>
+
+`);
+
+  setTimeout(()=>{
+    const input=document.getElementById('adminCode');
+    if(input)input.focus();
+  },100);
+}
+
+function checkAdminCode(){
+
+  const input=document.getElementById('adminCode');
+
+  if(!input)return;
+
+  const code=input.value.trim();
+
+  if(code==='1212'){
+
+    role='admin';
+
+    localStorage.setItem(
+      'nova_role',
+      'admin'
+    );
+
+    closeModal();
+
+    renderAdmin();
+
+    toast('Добро пожаловать в кабинет администратора');
+
+  }else{
+
+    input.value='';
+
+    input.focus();
+
+    toast('Неверный код администратора');
+  }
+}
+
+/* =========================
+   ОТДЕЛЬНЫЙ КАБИНЕТ АДМИНА
+========================= */
+
+function enterAdmin(){
+
+  role='admin';
+
+  localStorage.setItem(
+    'nova_role',
+    'admin'
+  );
+
+  renderAdmin();
+}
+
+function renderAdmin(){
+
+  role='admin';
+
+  currentPage='admin';
+
+  const bottom=document.getElementById('bottomNav');
+  const search=document.querySelector('.search');
+
+  if(bottom)bottom.style.display='none';
+  if(search)search.style.display='none';
+
+  const banner=document.getElementById('roleBanner');
+
+  if(banner){
+    banner.classList.add('hidden');
+  }
+
+  document.getElementById('main').innerHTML=`
+
+<section class="section admin-layout">
+
+  <div class="admin-title">
+
+    <div class="head">
+
+      <div>
+
+        <h1>🛠️ Кабинет администратора</h1>
+
+        <p>
+          Полное управление NOVA SHOP
+        </p>
+
+      </div>
+
+      <button
+        class="mini admin-exit"
+        onclick="exitRole()"
+      >
+        🚪 Выйти
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="adminstat">
+
+    <div class="stat">
+      <small class="muted">Товары</small>
+      <b>${state.products.length}</b>
+    </div>
+
+    <div class="stat">
+      <small class="muted">Заказы</small>
+      <b>${state.orders.length}</b>
+    </div>
+
+    <div class="stat">
+      <small class="muted">Заявки</small>
+      <b>
+        ${
+          state.courierRequests.filter(
+            x=>x.status==='На рассмотрении'
+          ).length
+        }
+      </b>
+    </div>
+
+    <div class="stat">
+      <small class="muted">Доставщики</small>
+      <b>${state.couriers.length}</b>
+    </div>
+
+  </div>
+
+  <div class="admin-menu">
+
+    <button
+      id="adminMenuProducts"
+      class="active"
+      onclick="adminTab('products',this)"
+    >
+      📦 Товары
+    </button>
+
+    <button
+      id="adminMenuOrders"
+      onclick="adminTab('orders',this)"
+    >
+      🧾 Заказы
+    </button>
+
+    <button
+      id="adminMenuCouriers"
+      onclick="adminTab('couriers',this)"
+    >
+      🚚 Курьеры
+    </button>
+
+    <button
+      id="adminMenuSettings"
+      onclick="adminTab('settings',this)"
+    >
+      ⚙️ Настройки
+    </button>
+
+  </div>
+
+  <div id="adminContent"></div>
+
+</section>
+
+`;
+
+  adminProducts();
+}
+
+function adminTab(t,b){
+
+  document
+    .querySelectorAll('.admin-menu button')
+    .forEach(x=>x.classList.remove('active'));
+
+  if(b)b.classList.add('active');
+
+  if(t==='products')adminProducts();
+  if(t==='orders')adminOrders();
+  if(t==='couriers')adminCouriers();
+  if(t==='settings')adminSettings();
+}
+
+function adminProducts(){
+
+  const el=document.getElementById('adminContent');
+
+  if(!el)return;
+
+  el.innerHTML=`
+
+<button
+  class="btn"
+  onclick="adminEdit(0)"
+>
+  ＋ Добавить товар
+</button>
+
+${
+
+state.products.length
+
+?state.products.map(p=>`
+
+<div class="admincard">
+
+  <div class="adminrow">
+
+    <img
+      src="${esc(p.img)}"
+      onerror="this.src='https://placehold.co/200x200/181a23/ffffff?text=PRODUCT'"
+    >
+
+    <div class="grow">
+
+      <b>${esc(p.name)}</b>
+
+      <div class="muted">
+        ${esc(p.cat)} · ${money(p.price)}
+      </div>
+
+      <div class="muted">
+        Склад: ${p.stock}
+      </div>
+
+      <div class="muted">
+        ⭐ ${p.rating}
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="actions">
+
+    <button
+      class="mini primary"
+      onclick="adminEdit(${p.id})"
+    >
+      Изменить
+    </button>
+
+    <button
+      class="mini"
+      onclick="quickPrice(${p.id})"
+    >
+      Цена
+    </button>
+
+    <button
+      class="mini"
+      onclick="quickStock(${p.id})"
+    >
+      Склад
+    </button>
+
+    <button
+      class="mini danger"
+      onclick="deleteProduct(${p.id})"
+    >
+      Удалить
+    </button>
+
+  </div>
+
+</div>
+
+`).join('')
+
+:'<div class="empty">Товаров пока нет</div>'
+
+}
+
+`;
+}
+
+function adminEdit(id){
+
+  const p=id
+    ?getProduct(id)
+    :{
+      name:'',
+      cat:'Обувь',
+      price:0,
+      old:0,
+      stock:0,
+      rating:5,
+      img:'',
+      desc:''
+    };
+
+  editingId=id||null;
+
+  showModal(`
+
+<div class="sheethead">
+
+  <h2>
+    ${id?'Изменить товар':'Добавить товар'}
+  </h2>
+
+  <button
+    class="close"
+    onclick="closeModal()"
+  >
+    ×
+  </button>
+
+</div>
+
+<div class="form">
+
+  <div class="field">
+
+    <label>Название</label>
+
+    <input
+      id="aName"
+      value="${esc(p.name)}"
+    >
+
+  </div>
+
+  <div class="formgrid">
+
+    <div class="field">
+
+      <label>Категория</label>
+
+      <input
+        id="aCat"
+        value="${esc(p.cat)}"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Цена $</label>
+
+      <input
+        id="aPrice"
+        type="number"
+        step="0.01"
+        value="${p.price}"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Старая цена $</label>
+
+      <input
+        id="aOld"
+        type="number"
+        step="0.01"
+        value="${p.old||0}"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Склад</label>
+
+      <input
+        id="aStock"
+        type="number"
+        min="0"
+        value="${p.stock||0}"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Рейтинг</label>
+
+      <input
+        id="aRating"
+        type="number"
+        step="0.1"
+        min="0"
+        max="5"
+        value="${p.rating||5}"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>URL фотографии</label>
+
+      <input
+        id="aImg"
+        value="${esc(p.img)}"
+      >
+
+    </div>
+
+    <div class="field full">
+
+      <label>Описание</label>
+
+      <textarea id="aDesc">${esc(p.desc)}</textarea>
+
+    </div>
+
+  </div>
+
+  <button
+    class="btn"
+    onclick="saveProduct()"
+  >
+    Сохранить товар
+  </button>
+
+</div>
+
+`);
+}
+
+function saveProduct(){
+
+  const name=document.getElementById('aName')?.value.trim()||'';
+  const cat=document.getElementById('aCat')?.value.trim()||'Другое';
+  const price=Number(
+    document.getElementById('aPrice')?.value
+  );
+
+  const old=Number(
+    document.getElementById('aOld')?.value
+  )||0;
+
+  const stock=Math.max(
+    0,
+    Number(document.getElementById('aStock')?.value)||0
+  );
+
+  const rating=Math.min(
+    5,
+    Math.max(
+      0,
+      Number(document.getElementById('aRating')?.value)||5
+    )
+  );
+
+  const img=
+    document.getElementById('aImg')?.value.trim()
+    ||
+    'https://placehold.co/800x800/181a23/ffffff?text=PRODUCT';
+
+  const desc=
+    document.getElementById('aDesc')?.value.trim()||'';
+
+  if(!name||!Number.isFinite(price)||price<0){
+    return toast('Проверьте название и цену');
+  }
+
+  const p={
+    id:editingId||Date.now(),
+    name,
+    cat,
+    price,
+    old,
+    stock,
+    rating,
+    img,
+    desc
+  };
+
+  const i=state.products.findIndex(
+    x=>x.id===editingId
+  );
+
+  if(i>=0){
+    state.products[i]=p;
+  }else{
+    state.products.unshift(p);
+  }
+
+  save();
+
+  closeModal();
+
+  adminProducts();
+
+  toast('Товар сохранён');
+}
+
+function quickPrice(id){
+
+  const p=getProduct(id);
+
+  if(!p)return;
+
+  const v=prompt(
+    'Новая цена для '+p.name,
+    p.price
+  );
+
+  if(
+    v!==null&&
+    Number.isFinite(Number(v))&&
+    Number(v)>=0
+  ){
+
+    p.price=Number(v);
+
+    save();
+
+    adminProducts();
+
+    toast('Цена изменена');
+  }
+}
+
+function quickStock(id){
+
+  const p=getProduct(id);
+
+  if(!p)return;
+
+  const v=prompt(
+    'Новое количество на складе',
+    p.stock
+  );
+
+  if(
+    v!==null&&
+    Number.isFinite(Number(v))&&
+    Number(v)>=0
+  ){
+
+    p.stock=Math.floor(Number(v));
+
+    save();
+
+    adminProducts();
+
+    toast('Остаток изменён');
+  }
+}
+
+function deleteProduct(id){
+
+  if(!confirm('Удалить товар?'))return;
+
+  state.products=state.products.filter(
+    p=>p.id!==id
+  );
+
+  delete state.cart[id];
+
+  save();
+
+  adminProducts();
+
+  toast('Товар удалён');
+}
+
+function adminOrders(){
+
+  const el=document.getElementById('adminContent');
+
+  if(!el)return;
+
+  el.innerHTML=
+
+    state.orders.length
+
+    ?state.orders.map((o,i)=>`
+
+      <div class="admincard">
+
+        <div class="head">
+
+          <b>${esc(o.id)}</b>
+
+          <span class="status">
+            ${esc(o.status)}
+          </span>
+
+        </div>
+
+        <div class="muted">
+          👤 ${esc(o.name)} · ${esc(o.phone)}
+        </div>
+
+        <div class="muted">
+          📍 ${esc(o.address)}
+        </div>
+
+        <div class="muted">
+          💰 ${money(o.total)}
+        </div>
+
+        <div class="muted">
+          💳 ${
+            o.payment==='cash'
+            ?'Наличными'
+            :'Перевод'
+          }
+        </div>
+
+        <div class="actions">
+
+          <select
+            onchange="changeStatus(${i},this.value)"
+          >
+
+            ${
+              [
+                'Принят',
+                'Собирается',
+                'В пути',
+                'Доставлено',
+                'Отменён'
+              ]
+              .map(s=>`
+                <option
+                  ${s===o.status?'selected':''}
+                >
+                  ${s}
+                </option>
+              `)
+              .join('')
+            }
+
+          </select>
+
+          <button
+            class="mini primary"
+            onclick="openOrder('${esc(o.id)}')"
+          >
+            🗺️ Карта
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join('')
+
+    :'<div class="empty">Заказов нет</div>';
+}
+
+function changeStatus(i,s){
+
+  if(!state.orders[i])return;
+
+  state.orders[i].status=s;
+
+  save();
+
+  adminOrders();
+
+  toast('Статус изменён');
+}
+
+function adminCouriers(){
+
+  const el=document.getElementById('adminContent');
+
+  if(!el)return;
+
+  el.innerHTML=`
+
+<h3>Заявки на доставку</h3>
+
+${
+  state.courierRequests.length
+
+  ?state.courierRequests.map((r,i)=>`
+
+    <div class="request">
+
+      <div class="head">
+
+        <b>🚚 ${esc(r.name)}</b>
+
+        <span class="status">
+          ${esc(r.status)}
+        </span>
+
+      </div>
+
+      <div class="muted">
+        📞 ${esc(r.phone)}
+      </div>
+
+      <div class="muted">
+        🚗 ${esc(r.vehicle)}
+      </div>
+
+      <div class="muted">
+        ${esc(r.created)}
+      </div>
+
+      ${
+        r.status==='На рассмотрении'
+        ?
+        `
+        <div class="actions">
+
+          <button
+            class="mini primary"
+            onclick="approveCourier(${i})"
+          >
+            ✓ Одобрить
+          </button>
+
+          <button
+            class="mini danger"
+            onclick="rejectCourier(${i})"
+          >
+            Отклонить
+          </button>
+
+        </div>
+        `
+        :''
+      }
+
+    </div>
+
+  `).join('')
+
+  :'<div class="empty">Заявок пока нет</div>'
+}
+
+<h3 style="margin-top:30px">
+  Одобренные доставщики
+</h3>
+
+${
+  state.couriers.length
+
+  ?state.couriers.map(c=>`
+
+    <div class="admincard">
+
+      <div class="adminrow">
+
+        <div class="grow">
+
+          <b>${esc(c.name)}</b>
+
+          <div class="muted">
+            📞 ${esc(c.phone)}
+          </div>
+
+          <div class="muted">
+            🚗 ${esc(c.vehicle)}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `).join('')
+
+  :'<div class="empty">Доставщиков пока нет</div>'
+}
+
+`;
+}
+
+function approveCourier(i){
+
+  const r=state.courierRequests[i];
+
+  if(!r)return;
+
+  r.status='Одобрено';
+
+  if(
+    !state.couriers.some(
+      c=>c.phone===r.phone
+    )
+  ){
+
+    state.couriers.push({
+      id:'C-'+Date.now(),
+      name:r.name,
+      phone:r.phone,
+      vehicle:r.vehicle
+    });
+
+  }
+
+  save();
+
+  adminCouriers();
+
+  toast('Доставщик одобрен');
+}
+
+function rejectCourier(i){
+
+  if(!state.courierRequests[i])return;
+
+  state.courierRequests[i].status='Отклонено';
+
+  save();
+
+  adminCouriers();
+
+  toast('Заявка отклонена');
+}
+
+function adminSettings(){
+
+  const el=document.getElementById('adminContent');
+
+  if(!el)return;
+
+  el.innerHTML=`
+
+<div class="admincard">
+
+  <div class="form">
+
+    <div class="field">
+
+      <label>Название магазина</label>
+
+      <input
+        id="sShop"
+        value="${esc(state.config.shopName)}"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Адрес магазина — ОТКУДА</label>
+
+      <input
+        id="sAddress"
+        value="${esc(state.config.shopAddress)}"
+      >
+
+    </div>
+
+    <div class="formgrid">
+
+      <div class="field">
+
+        <label>Широта магазина</label>
+
+        <input
+          id="sLat"
+          type="number"
+          step="0.000001"
+          value="${state.config.shopLat}"
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label>Долгота магазина</label>
+
+        <input
+          id="sLng"
+          type="number"
+          step="0.000001"
+          value="${state.config.shopLng}"
+        >
+
+      </div>
+
+    </div>
+
+    <div class="field">
+
+      <label>Стоимость доставки $</label>
+
+      <input
+        id="sFee"
+        type="number"
+        step="0.01"
+        value="${state.config.deliveryFee}"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Банк / платёжная система</label>
+
+      <input
+        id="sBank"
+        value="${esc(state.config.paymentBank)}"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Номер счёта / карты</label>
+
+      <input
+        id="sAccount"
+        value="${esc(state.config.paymentAccount)}"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Получатель</label>
+
+      <input
+        id="sName"
+        value="${esc(state.config.paymentName)}"
+      >
+
+    </div>
+
+    <button
+      class="btn"
+      onclick="saveSettings()"
+    >
+      Сохранить настройки
+    </button>
+
+  </div>
+
+</div>
+
+`;
+}
+
+function saveSettings(){
+
+  const shop=
+    document.getElementById('sShop')?.value.trim()
+    ||'NOVA SHOP';
+
+  const address=
+    document.getElementById('sAddress')?.value.trim()
+    ||'';
+
+  const lat=
+    Number(document.getElementById('sLat')?.value)
+    ||38.5737;
+
+  const lng=
+    Number(document.getElementById('sLng')?.value)
+    ||68.7864;
+
+  const fee=Math.max(
+    0,
+    Number(document.getElementById('sFee')?.value)||0
+  );
+
+  const bank=
+    document.getElementById('sBank')?.value.trim()
+    ||'';
+
+  const account=
+    document.getElementById('sAccount')?.value.trim()
+    ||'';
+
+  const name=
+    document.getElementById('sName')?.value.trim()
+    ||'';
+
+  state.config={
+    shopName:shop,
+    shopAddress:address,
+    shopLat:lat,
+    shopLng:lng,
+    deliveryFee:fee,
+    paymentBank:bank,
+    paymentAccount:account,
+    paymentName:name
+  };
+
+  save();
+
+  toast('Настройки сохранены');
+
+  adminSettings();
+}
+
+function openCourierApply(){
+
+  const existing=state.courierRequests.find(
+    r=>
+      r.phone===state.profile.phone&&
+      r.status==='На рассмотрении'
+  );
+
+  showModal(`
+
+<div class="sheethead">
+
+  <h2>Стать доставщиком</h2>
+
+  <button
+    class="close"
+    onclick="closeModal()"
+  >
+    ×
+  </button>
+
+</div>
+
+<p class="muted">
+  Заполните заявку.
+  Она попадёт только в админ-панель.
+</p>
+
+<div class="form">
+
+  <div class="field">
+
+    <label>Ваше имя *</label>
+
+    <input
+      id="rName"
+      value="${esc(state.profile.name)}"
+    >
+
+  </div>
+
+  <div class="field">
+
+    <label>Номер телефона *</label>
+
+    <input
+      id="rPhone"
+      value="${esc(state.profile.phone)}"
+      placeholder="+992 ..."
+    >
+
+  </div>
+
+  <div class="field">
+
+    <label>Транспорт *</label>
+
+    <select id="rVehicle">
+
+      <option>Автомобиль</option>
+      <option>Мотоцикл</option>
+      <option>Велосипед</option>
+      <option>Пешком</option>
+
+    </select>
+
+  </div>
+
+  <button
+    class="btn"
+    onclick="sendCourierRequest()"
+    ${existing?'disabled':''}
+  >
+
+    ${
+      existing
+      ?'Заявка уже отправлена'
+      :'Отправить заявку'
+    }
+
+  </button>
+
+</div>
+
+`);
+}
+
+function sendCourierRequest(){
+
+  const name=
+    document.getElementById('rName')?.value.trim()
+    ||'';
+
+  const phone=
+    document.getElementById('rPhone')?.value.trim()
+    ||'';
+
+  const vehicle=
+    document.getElementById('rVehicle')?.value
+    ||'Автомобиль';
+
+  if(!name||!phone){
+    return toast('Заполните имя и телефон');
+  }
+
+  if(
+    state.courierRequests.some(
+      r=>
+        r.phone===phone&&
+        r.status==='На рассмотрении'
+    )
+  ){
+    return toast('Такая заявка уже есть');
+  }
+
+  state.courierRequests.unshift({
+    id:'R-'+Date.now(),
+    name,
+    phone,
+    vehicle,
+    status:'На рассмотрении',
+    created:new Date().toLocaleString('ru-RU')
+  });
+
+  state.profile.name=name;
+  state.profile.phone=phone;
+
+  save();
+
+  closeModal();
+
+  toast('Заявка отправлена администратору');
+}
+
+/* =========================
+   КАБИНЕТ КУРЬЕРА
+========================= */
+
+function renderCourier(){
+
+  role='courier';
+
+  localStorage.setItem(
+    'nova_role',
+    'courier'
+  );
+
+  const bottom=document.getElementById('bottomNav');
+  const search=document.querySelector('.search');
+
+  if(bottom)bottom.style.display='none';
+  if(search)search.style.display='none';
+
+  const banner=document.getElementById('roleBanner');
+
+  if(banner){
+
+    banner.classList.remove('hidden');
+
+    banner.innerHTML=`
+
+<div>
+
+  <span>
+    🚚 Режим доставщика
+  </span>
+
+  <button
+    class="mini"
+    onclick="exitRole()"
+  >
+    Выйти
+  </button>
+
+</div>
+
+`;
+  }
+
+  const available=state.orders.filter(
+    o=>
+      !o.courierId&&
+      ['Принят','Собирается'].includes(o.status)
+  );
+
+  document.getElementById('main').innerHTML=`
+
+<section class="section">
+
+  <div class="head">
+
+    <h2>Кабинет доставщика</h2>
+
+    <span class="link">
+      ${available.length} заказов
+    </span>
+
+  </div>
+
+  <div
+    class="map"
+    id="courierMap"
+  ></div>
+
+  ${
+    available.length
+
+    ?available.map(o=>`
+
+      <div class="ordercard">
+
+        <div class="head">
+
+          <b>${esc(o.id)}</b>
+
+          <span>${money(o.total)}</span>
+
+        </div>
+
+        <div class="routegrid">
+
+          <div class="point">
+
+            <small>ОТКУДА</small>
+
+            ${esc(o.from)}
+
+          </div>
+
+          <div class="point">
+
+            <small>КУДА</small>
+
+            ${esc(o.address)}
+
+          </div>
+
+        </div>
+
+        <div class="actions">
+
+          <button
+            class="btn"
+            onclick="takeOrder('${esc(o.id)}')"
+          >
+            Взять заказ
+          </button>
+
+          <button
+            class="mini primary"
+            onclick="courierOrder('${esc(o.id)}')"
+          >
+            Открыть
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join('')
+
+    :'<div class="empty">Свободных заказов пока нет 🚚</div>'
+  }
+
+</section>
+
+`;
+
+  setTimeout(initCourierMap,150);
+}
+
+function initCourierMap(){
+
+  if(!window.L)return;
+
+  const el=document.getElementById('courierMap');
+
+  if(!el)return;
+
+  const m=L.map(el).setView(
+    [
+      state.config.shopLat,
+      state.config.shopLng
+    ],
+    12
+  );
+
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      maxZoom:19,
+      attribution:'© OpenStreetMap'
+    }
+  ).addTo(m);
+
+  L.marker([
+    state.config.shopLat,
+    state.config.shopLng
+  ])
+  .addTo(m)
+  .bindPopup('NOVA SHOP');
+
+  state.orders
+    .filter(
+      o=>
+        !o.courierId&&
+        ['Принят','Собирается'].includes(o.status)
+    )
+    .forEach(o=>{
+
+      L.marker([
+        o.lat,
+        o.lng
+      ])
+      .addTo(m)
+      .bindPopup(
+        esc(o.id)+' — '+esc(o.address)
+      );
+
+    });
+}
+
+function takeOrder(id){
+
+  const o=state.orders.find(
+    x=>x.id===id
+  );
+
+  if(!o)return;
+
+  if(o.courierId){
+    return toast('Этот заказ уже взят');
+  }
+
+  const courier=state.couriers[0];
+
+  o.courierId=
+    courier?.id||
+    'courier-demo';
+
+  o.status='В пути';
+
+  save();
+
+  courierOrder(id);
+}
+
+function courierOrder(id){
+
+  const o=state.orders.find(
+    x=>x.id===id
+  );
+
+  if(!o)return;
+
+  showModal(`
+
+<div class="sheethead">
+
+  <h2>${esc(o.id)}</h2>
+
+  <button
+    class="close"
+    onclick="closeModal()"
+  >
+    ×
+  </button>
+
+</div>
+
+<div class="routegrid">
+
+  <div class="point">
+
+    <small>ОТКУДА</small>
+
+    ${esc(o.from)}
+
+  </div>
+
+  <div class="point">
+
+    <small>КУДА</small>
+
+    ${esc(o.address)}
+
+  </div>
+
+</div>
+
+<p class="muted">
+  📞 Клиент: ${esc(o.phone)}
+</p>
+
+<p>
+  💰 Сумма заказа:
+  <b>${money(o.total)}</b>
+</p>
+
+<div
+  id="courierOrderMap"
+  class="map"
+></div>
+
+<div class="actions">
+
+  <button
+    class="btn"
+    onclick="courierStatus('${esc(o.id)}','Доставлено')"
+  >
+    ✓ Доставлено
+  </button>
+
+  <button
+    class="mini"
+    onclick="courierStatus('${esc(o.id)}','Собирается')"
+  >
+    Вернуть статус
+  </button>
+
+</div>
+
+`);
+
+  setTimeout(()=>{
+    initRouteMap(o,'courierOrderMap');
+  },150);
+}
+
+function courierStatus(id,s){
+
+  const o=state.orders.find(
+    x=>x.id===id
+  );
+
+  if(!o)return;
+
+  o.status=s;
+
+  save();
+
+  closeModal();
+
+  renderCourier();
+
+  toast('Статус: '+s);
+}
+
+function exitRole(){
+
+  role='customer';
+
+  localStorage.setItem(
+    'nova_role',
+    'customer'
+  );
+
+  const bottom=document.getElementById('bottomNav');
+  const search=document.querySelector('.search');
+  const banner=document.getElementById('roleBanner');
+
+  if(bottom)bottom.style.display='flex';
+  if(search)search.style.display='flex';
+
+  if(banner){
+    banner.classList.add('hidden');
+    banner.innerHTML='';
+  }
+
+  go('home');
+}
+
+function renderSearch(){
+
+  const search=document.getElementById('search');
+
+  const q=search
+    ?search.value.trim().toLowerCase()
+    :'';
+
+  const list=state.products.filter(p=>
+    !q||
+    p.name.toLowerCase().includes(q)||
+    p.cat.toLowerCase().includes(q)
+  );
+
+  document.getElementById('main').innerHTML=`
+
+<section class="section">
+
+  <div class="head">
+
+    <h2>Поиск</h2>
+
+    <span class="link">
+      ${list.length} товаров
+    </span>
+
+  </div>
+
+  <div class="grid">
+
+    ${
+      list.length
+      ?list.map(productCard).join('')
+      :'<div class="empty" style="grid-column:1/-1">Ничего не найдено</div>'
+    }
+
+  </div>
+
+</section>
+
+`;
+
+  if(search){
+    search.focus();
+  }
+}
+
+function closeModal(){
+
+  if(map){
+    map.remove();
+    map=null;
+  }
+
+  mapMarker=null;
+
+  document
+    .getElementById('modal')
+    .classList.remove('show');
+
+  document
+    .getElementById('sheet')
+    .innerHTML='';
+}
+
+function showModal(html){
+
+  document
+    .getElementById('sheet')
+    .innerHTML=html;
+
+  document
+    .getElementById('modal')
+    .classList.add('show');
+}
+
+/* =========================
+   ЗАПУСК
+========================= */
+
+function boot(){
+
+  updateBadge();
+
+  if(role==='admin'){
+    renderAdmin();
+    return;
+  }
+
+  if(role==='courier'){
+    renderCourier();
+    return;
+  }
+
+  const name=state.profile.name;
+
+  if(name){
+    const hello=document.getElementById('helloSmall');
+
+    if(hello){
+      hello.textContent='Привет, '+name+' 👋';
+    }
+  }
+
+  renderHome();
+}
+
+boot();
+
+</script>
+
+</body>
+</html>
